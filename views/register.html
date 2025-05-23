@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="title">
+            <p>📝 My Todo List</p>
+        </div>
+    </header>
+    <div class="register">
+        <h3> Create An Account</h3>
+        <form method="post" action="/api/register" class="register-form">
+            <input type="text" name="username" placeholder="Enter a username..." required>
+            <div class="exists-msg" hidden>
+                <span></span>
+            </div>
+            <input type="text" name="name" placeholder="Enter your name...">
+            <input type="password" name="password" placeholder="Enter a password..." required>
+            <input type="submit" value="Create Account">
+        </form>
+        <div class="bottom-link">
+            <a href="/api/login">Already have an account? Log in your account</a>
+        </div>
+    </div>
+
+    <script src="/registerScript.js"></script>
+</body>
+</html>

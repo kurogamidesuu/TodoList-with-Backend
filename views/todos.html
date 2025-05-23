@@ -11,19 +11,11 @@
         <div class="title">
             <p>📝 My Todo List</p>
         </div>
+        <button class="logout-btn">
+            <div>logout</div>
+        </button>
     </header>
-    <div class="register">
-        <h3>Register yourself</h3>
-        <form class="register-form">
-            <input name="username" placeholder="Enter a username..." required>
-            <div class="exists-msg" hidden>
-                <span></span>
-            </div>
-            <button type="submit" name="action" value="register"><span>Register</span></button>
-            <button type="submit" name="action" value="login"><span>Login</span></button>
-        </form>
-    </div>
-    <div class="todo-app" hidden>
+    <div class="todo-app">
         <div class="inputs">
             <input type="text" placeholder="What do you need to do? ✨" class="js-input-item">
             <input type="date" class="js-input-date">
@@ -35,6 +27,6 @@
         <p>Made with ❤️ by Hempushp Chauhan</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="/todos.js"></script>
 </body>
 </html>

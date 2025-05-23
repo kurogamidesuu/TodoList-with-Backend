@@ -1,16 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const path = require('path');
 
-router.get('/users/:id/todos', async (req, res) => {
-    try {
-        const user = await User.findById({_id: req.params.id});
-        if (!user) return res.json({error: 'User not found'});
-
-        res.json(user.todoList);
-    } catch(e) {
-        res.json({error: 'Server error'});
-    }
+router.get('/users/todos', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'todos.html'));
 });
 
 router.post('/users/:id/addtodo', async (req, res) => {

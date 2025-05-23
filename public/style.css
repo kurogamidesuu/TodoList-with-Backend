@@ -13,12 +13,35 @@ body {
 }
 
 header {
-    height: 20vh;
+    height: 10em;
     width: 100%;
     text-align: center;
     padding: 15px 0;
     background-color: #e07a5f;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logout-btn {
+    position: fixed;
+    right: 2.7em;
+    top: 7.5em;
+    background-color: #f34d60;
+    color: #edf2f4;
+    border: solid #d90429 3px;
+    border-radius: 10px;
+    transition: all 0.1s ease-in-out;
+}
+
+.logout-btn:hover {
+    background-color: #d90429;
+}
+
+.logout-btn div {
+    height: 2.5em;
+    width: 5.5em;
+    text-align: center;
+    padding-top: 6.5px;
+    padding-bottom: 0;
 }
 
 .title p {
@@ -28,21 +51,21 @@ header {
     color: #edf2f4;
 }
 
-.register {
+.register, .login {
     background-color: #cf5f3a;
     width: 25em;
-    margin: 10em auto;
+    margin: 6em auto 0 auto;
     padding: 1em 2em 2em 2em;
     text-align: center;
     border-radius: 10px;
 }
 
-.register h3 {
+.register h3, .login h3 {
     font-size: 30px;
     color: #edf2f4;
 }
 
-.register-form {
+.register-form, .login-form {
     background-color: #e0a68d;
     margin-top: 1em;
     padding: 2em 0 1em 0;
@@ -53,7 +76,7 @@ header {
     border-radius: 5px;
 }
 
-.register-form input {
+.register-form input, .login-form input {
     height: 2.5em;
     width: 20em;
     border: none;
@@ -70,7 +93,7 @@ header {
     padding-left: 3.5em;
 }
 
-.register-form button {
+.register-form input[type="submit"], .login-form input[type="submit"] {
     height: 3em;
     width: 15em;
     border: none;
@@ -81,12 +104,17 @@ header {
     transition: all 0.1s ease-in-out;
 }
 
-.register-form span {
+.register-form span, .login-form span {
     font-size: 18px;
 }
 
-.register-form button:hover {
+.register-form input[type="submit"]:hover, .login-form input[type="submit"]:hover {
     background-color: #3b8659;
+}
+
+.bottom-link {
+    font-size: 0.8em;
+    margin-top: 1em;
 }
 
 .todo-app {

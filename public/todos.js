@@ -1,53 +1,16 @@
-let todoList = localStorage.getItem('todoList') || [];
-let currentUsername = null;
+let todoList = [];
+if (localStorage.getItem('todoList')) {
+    todoList = JSON.parse(localStorage.getItem('todoList'));
+}
 
-document.querySelector('.register-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const action = e.submitter.value;
-    const username = e.target.username.value.trim();
+document.querySelector('.logout-btn').addEventListener('click', async () => {
+    localStorage.clear();
+    const res = await fetch('/api/users/logout');
+    window.location.href = '/api/login';
+});
 
-    try {
-        let res;
-        if (action === 'register') {
-            res = await fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({username})
-            });
-        }
-
-        if (action === 'login') {
-            res = await fetch(`/api/login/${username}`);
-        }
-
-        if (!res.ok) {
-            const errData = await res.json();
-            document.querySelector('.exists-msg').innerText = errData.error;
-            document.querySelector('.exists-msg').style.display = 'block';
-
-            return console.log(errData.error);
-        }
-
-        const data = await res.json();
-        
-        if(data.userId) {
-            localStorage.setItem('userId', data.userId);
-            currentUsername = username;
-
-            const todoRes = await fetch(`/api/users/${data.userId}/todos`);
-            todoList = await todoRes.json();
-            localStorage.setItem('todoList', todoList);
-            
-            document.querySelector('.register').style.display = 'none';
-            document.querySelector('.todo-app').style.display = 'block';
-            renderList();
-        }
-
-    } catch(e) {
-        console.error('error: ', e);
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    renderList();
 });
 
 document.getElementById('js-add-btn').addEventListener('click', async e => {
@@ -56,7 +19,7 @@ document.getElementById('js-add-btn').addEventListener('click', async e => {
     const item = document.querySelector('.js-input-item').value.trim();
     let date = document.querySelector('.js-input-date').value;
     
-    const userId = localStorage.getItem('userId');
+    const userId = JSON.parse(localStorage.getItem('userId'));
 
     if (!item) {
         alert('Item input required!');
@@ -78,17 +41,20 @@ document.getElementById('js-add-btn').addEventListener('click', async e => {
     });
 
     todoList = await res.json();
+    localStorage.setItem('todoList', JSON.stringify(todoList));
+
     document.querySelector('.js-input-item').value = '';
     renderList();
 });
 
 async function deleteTodo(index) {
-    const userId = localStorage.getItem('userId');
+    const userId = JSON.parse(localStorage.getItem('userId'));
 
     try {
         const res = await fetch(`/api/users/${userId}/deletetodo?index=${index}`);
 
         todoList = await res.json();
+        localStorage.setItem('todoList', JSON.stringify(todoList));
         renderList();
     } catch(e) {
         console.error("Error occured");
@@ -96,7 +62,7 @@ async function deleteTodo(index) {
 }
 
 async function swapUp(index) {
-    const userId = localStorage.getItem('userId');
+    const userId = JSON.parse(localStorage.getItem('userId'));
     
     try {
         const res = await fetch(`/api/users/${userId}/swaptodo?index=${index}&direction=up`);
@@ -106,6 +72,7 @@ async function swapUp(index) {
             alert(errData.error);
         }
         todoList = await res.json();
+        localStorage.setItem('todoList', JSON.stringify(todoList));
         renderList();
     } catch(e) {
 
@@ -113,7 +80,7 @@ async function swapUp(index) {
 }
 
 async function swapDown(index) {
-    const userId = localStorage.getItem('userId');
+    const userId = JSON.parse(localStorage.getItem('userId'));
     
     try {
         const res = await fetch(`/api/users/${userId}/swaptodo?index=${index}&direction=down`);
@@ -123,6 +90,7 @@ async function swapDown(index) {
             alert(errData.error);
         }
         todoList = await res.json();
+        localStorage.setItem('todoList', JSON.stringify(todoList));
         renderList();
     } catch(e) {
 
