@@ -128,3 +128,26 @@ function renderList() {
     }
     document.querySelector('.js-list').innerHTML = HTMLstring;
 }
+
+document.querySelector('.edit-pfp-btn').addEventListener('click', async () => {
+    document.querySelector('.upload-pfp-box').showModal();
+});
+
+document.querySelector('.close-btn').addEventListener('click', () => {
+    const pfpPreview = document.getElementById('pfp-preview');
+
+    pfpPreview.src = pfpPreview.dataset.defaultSrc;
+    document.querySelector('.upload-pfp-box').close();
+});
+
+document.getElementById('pfp-input').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('pfp-preview').src = e.target.result;
+        }
+
+        reader.readAsDataURL(file);
+    }
+});

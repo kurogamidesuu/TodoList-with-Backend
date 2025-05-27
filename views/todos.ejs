@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="title">
+            <p>📝 <%= user.name %>'s Todo List</p>
+        </div>
+        <div class="pfp">
+            <div class="edit-pfp-btn">
+                <img src="https://res.cloudinary.com/dqnk13t8s/image/upload/v1748013514/edit-button_z4hw8i.png" height="60%" width="60%">
+            </div>
+            <img class="picture" src="/images/uploads/<%= user.pfp %>" alt="pfp" height="100%" width="100%">
+        </div>
+        <button class="logout-btn">
+            <div>logout</div>
+        </button>
+    </header>
+    <dialog class="upload-pfp-box">
+        <div class="upload-box-header">
+            <h3>Add Profile Picture</h3>
+            <div class="close-btn">x</div>
+        </div>
+        <div class="pfp-preview">
+            <img id="pfp-preview" src="/images/uploads/<%= user.pfp %>" data-default-src="/images/uploads/<%= user.pfp %>" height="100%">
+        </div>
+        <form class="change-pfp-form" action="/api/users/change-pfp" method="post" enctype="multipart/form-data">
+            <input id="pfp-input" type="file" name="pfp-image" accept="image/*" />
+            <input type="submit" value="Upload"  > 
+        </form>
+    </dialog>
+    <div class="todo-app">
+        <div class="inputs">
+            <input type="text" placeholder="What do you need to do? ✨" class="js-input-item">
+            <input type="date" class="js-input-date">
+            <button id="js-add-btn" class="add-btn">+ Add Task</button>
+        </div>
+        <div class="list js-list"></div>
+    </div>
+    <footer>
+        <p>Made with ❤️ by Hempushp Chauhan</p>
+    </footer>
+
+    <script src="/todos.js"></script>
+</body>
+</html>

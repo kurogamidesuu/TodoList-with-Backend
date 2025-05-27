@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require('../models/User');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const upload = require('../config/multerConfig.js');
+const fs = require('fs');
 
 const isLoggedIn = (req, res, next) => {
     const token = req.cookies?.token;
@@ -30,7 +32,10 @@ const isLoggedIn = (req, res, next) => {
 }
 
 router.get('/users/:username/todos', isLoggedIn, async (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'views', 'todos.html'));
+    const username = req.user.username;
+    const user = await User.findOne({username: username});
+
+    res.render('todos', {user: user});
 });
 
 router.post('/users/addtodo', isLoggedIn, async (req, res) => {
@@ -106,6 +111,24 @@ router.get('/users/swaptodo', isLoggedIn, async (req, res) => {
         res.status(500).json({error: 'Internal server error'});
     }
 
+});
+
+router.post('/users/change-pfp', isLoggedIn, upload.single('pfp-image'), async (req, res) => {
+    const id = req.user.userId;
+
+    const user = await User.findById(id);
+    if(!user) return res.status(400).json({error: 'User not found!'});
+
+    if(!req.file) return res.status(400).json({error: 'Upload the file'});
+
+    if(user.pfp !== 'default-pfp.png') {
+        fs.unlinkSync(`./public/images/uploads/${user.pfp}`);
+    }
+    user.pfp = req.file.filename;
+    
+    await user.save();
+
+    res.redirect(`/api/users/${user.username}/todos`);
 });
 
 module.exports = router;

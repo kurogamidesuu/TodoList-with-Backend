@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    pfp: {
+        type: String,
+        default: 'default-pfp.png'
+    },
     todoList: [todoSchema]
 });
 
