@@ -1,5 +1,14 @@
 let todoList = localStorage.getItem('todoList') || [];
 
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get('msg');
+
+    if (msg === 'login-required') alert('Please login first.');
+    if (msg === 'unauthorized-user') alert('You are not authorized to view this page.');
+    if (msg === 'invalid-token') alert('Session expired or token invalid. Please login again.');
+});
+
 document.querySelector('.login-form').addEventListener('submit', async e => {
     e.preventDefault();
     const username = e.target.username.value.trim();
@@ -25,12 +34,9 @@ document.querySelector('.login-form').addEventListener('submit', async e => {
         const data = await res.json();
         
         if(data.userId) {
-            localStorage.setItem('userId', JSON.stringify(data.userId));
-
-            todoList = data.todoList;
-            localStorage.setItem('todoList', JSON.stringify(todoList));
+            localStorage.setItem('todoList', JSON.stringify(data.todoList));
             
-            window.location.href = '/api/users/todos';
+            window.location.href = `/api/users/${data.username}/todos`;
         }
 
     } catch(e) {

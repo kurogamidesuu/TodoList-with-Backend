@@ -5,8 +5,6 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const secretKey = "Kurogamidesuu&Teru@27112002";
-
 router.get('/register', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'register.html'));
 });
@@ -33,14 +31,13 @@ router.post('/register', async (req, res) => {
                 todoList: []
             });
 
-            let token = jwt.sign({username}, secretKey);
+            let token = jwt.sign({username}, process.env.JWT_SECRET_KEY);
             res.cookie('token', token);
 
-            res.json({userId: newUser._id, todoList: newUser.todoList});
+            res.json({userId: newUser._id, username, todoList: newUser.todoList});
         });
     });
 });
-
 
 router.post('/login/:username', async (req, res) => {
     const { username } = req.params;
@@ -55,9 +52,9 @@ router.post('/login/:username', async (req, res) => {
         if (err) return res.status(400).json({error: 'server error!'});
 
         if(result) {
-            let token = jwt.sign(password, secretKey);
+            let token = jwt.sign({username: user.username, userId: user._id}, process.env.JWT_SECRET_KEY);
             res.cookie("token", token);
-            res.json({userId: user._id, todoList: user.todoList});
+            res.json({userId: user._id, username: user.username, todoList: user.todoList});
         } else {
             return res.status(400).json({error: 'Wrong password!'});
         }

@@ -19,8 +19,6 @@ document.getElementById('js-add-btn').addEventListener('click', async e => {
     const item = document.querySelector('.js-input-item').value.trim();
     let date = document.querySelector('.js-input-date').value;
     
-    const userId = JSON.parse(localStorage.getItem('userId'));
-
     if (!item) {
         alert('Item input required!');
         return 1;
@@ -32,13 +30,18 @@ document.getElementById('js-add-btn').addEventListener('click', async e => {
         date = new Date(date).toDateString();
     }
 
-    const res = await fetch(`/api/users/${userId}/addtodo`, {
+    const res = await fetch(`/api/users/addtodo`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({item, date})
     });
+
+    if(!res.ok) {
+        alert('Please log in first!');
+        window.location.href = '/api/login';
+    }
 
     todoList = await res.json();
     localStorage.setItem('todoList', JSON.stringify(todoList));
@@ -48,10 +51,13 @@ document.getElementById('js-add-btn').addEventListener('click', async e => {
 });
 
 async function deleteTodo(index) {
-    const userId = JSON.parse(localStorage.getItem('userId'));
-
     try {
-        const res = await fetch(`/api/users/${userId}/deletetodo?index=${index}`);
+        const res = await fetch(`/api/users/deletetodo?index=${index}`);
+
+        if(!res.ok) {
+            alert('Please log in first!');
+            window.location.href = '/api/login';
+        }
 
         todoList = await res.json();
         localStorage.setItem('todoList', JSON.stringify(todoList));
@@ -65,11 +71,12 @@ async function swapUp(index) {
     const userId = JSON.parse(localStorage.getItem('userId'));
     
     try {
-        const res = await fetch(`/api/users/${userId}/swaptodo?index=${index}&direction=up`);
+        const res = await fetch(`/api/users/swaptodo?index=${index}&direction=up`);
 
         if (!res.ok) {
             const errData = await res.json();
             alert(errData.error);
+            window.location.href = '/api/login';
         }
         todoList = await res.json();
         localStorage.setItem('todoList', JSON.stringify(todoList));
@@ -83,7 +90,7 @@ async function swapDown(index) {
     const userId = JSON.parse(localStorage.getItem('userId'));
     
     try {
-        const res = await fetch(`/api/users/${userId}/swaptodo?index=${index}&direction=down`);
+        const res = await fetch(`/api/users/swaptodo?index=${index}&direction=down`);
 
         if (!res.ok) {
             const errData = await res.json();

@@ -26,12 +26,9 @@ document.querySelector('.register-form').addEventListener('submit', async e => {
         const data = await res.json();
         
         if(data.userId) {
-            localStorage.setItem('userId', JSON.stringify(data.userId));
-
-            todoList = data.todoList;
-            localStorage.setItem('todoList', JSON.stringify(todoList));
+            localStorage.setItem('todoList', JSON.stringify(data.todoList));
             
-            window.location.href = '/api/users/todos';
+            window.location.href = `/api/users/${data.username}/todos`;
         }
 
     } catch(e) {

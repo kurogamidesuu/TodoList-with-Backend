@@ -4,6 +4,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 
@@ -11,6 +13,7 @@ const userRoutes = require('./routes/userRoutes');
 const todoRoutes = require('./routes/todosRoutes');
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.json());

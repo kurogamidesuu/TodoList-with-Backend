@@ -2,14 +2,40 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
-router.get('/users/todos', async (req, res) => {
+const isLoggedIn = (req, res, next) => {
+    const token = req.cookies?.token;
+
+    if(!token) {
+        if (req.accepts('html')) {
+            return res.redirect('/api/login?msg=login-required');
+        } else {
+            return res.status(401).json({ error: 'Please log in again!' });
+        }
+    } else {
+        try {
+            const data = jwt.verify(req.cookies.token, process.env.JWT_SECRET_KEY);
+
+            if(req.params.username && req.params.username !== data.username) {
+                return res.redirect('/api/login?msg=unauthorized-user');
+            }
+
+            req.user = data;
+            next();
+        } catch(err) {
+            return res.redirect('/api/login?msg=invalid-token');
+        }
+    }
+}
+
+router.get('/users/:username/todos', isLoggedIn, async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'todos.html'));
 });
 
-router.post('/users/:id/addtodo', async (req, res) => {
+router.post('/users/addtodo', isLoggedIn, async (req, res) => {
     try {
-        const { id } = req.params;
+        const id = req.user.userId;
         const { item, date} = req.body;
 
         const user = await User.findById({_id: id});
@@ -23,8 +49,8 @@ router.post('/users/:id/addtodo', async (req, res) => {
     }
 });
 
-router.get('/users/:id/deletetodo', async (req, res) => {
-    const { id } = req.params;
+router.get('/users/deletetodo', isLoggedIn, async (req, res) => {
+    const id = req.user.userId;
     const index = req.query.index;
 
     const user = await User.findById({_id: id});
@@ -36,8 +62,8 @@ router.get('/users/:id/deletetodo', async (req, res) => {
     res.json(user.todoList);
 });
 
-router.get('/users/:id/swaptodo', async (req, res) => {
-    const { id } = req.params;
+router.get('/users/swaptodo', isLoggedIn, async (req, res) => {
+    const id = req.user.userId;
     const { index, direction } = req.query;
 
     if (!index || !direction) {
