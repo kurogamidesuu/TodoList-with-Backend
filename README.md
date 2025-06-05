@@ -1,4 +1,4 @@
-# 📝 TodoList-with-Backend
+# 📝 TaskVault
 
 A full-stack Todo List web application built using **Node.js**, **Express.js**, **MongoDB**, and **EJS** templating. This application allows users to register, log in, and manage their personal task lists securely.
 </br>
